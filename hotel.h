@@ -2,6 +2,7 @@
 #define HOTEL_H_
 
 #include <array>
+#include <string>
 
 class Date{
     private:
@@ -18,11 +19,10 @@ class Date{
 
         void print_date() const;
         string DateToString() const;
-         
 
-        Date(); // member initialization list
-        Date(const Date&); //copy constructor
-        Date(int,int,int); //parameterized constructor 
+        Date();
+        Date(const Date&);
+        Date(int,int,int); 
         
 
 
@@ -31,22 +31,23 @@ class Date{
 
 class Information{
     private:
-        char* fname;
-        char* lname;
+        char fname[50]; // array of characters, not array of pointers to characters
+        char lname[50];
         Date DOB;
 
     public:
         Information();
         Information(char*,char*,int,int,int);
+       
         void print_info() const;
         string InfoToString() const;
         
-        char* get_fname() const;
-        char* get_lname() const;
+        const char* get_fname() const;
+        const char* get_lname() const;
         Date get_DOB() const;
 
-        void set_fname(char*);
-        void set_lname(char*);
+        void set_fname(const char*);
+        void set_lname(const char*);
         void set_DOB(int,int,int);
 
 
@@ -57,13 +58,14 @@ class Guests{
     private:
         Date checkIn;
         Date checkOut;
-        Information* roomGuests;
+        Information* roomGuests; 
         int NumGuests;
         int roomNumber;
 
     public:
-        Guests(); //Default constructor
-        Guests(int,int,int,int,int,int,int); // Parametrized constructor
+        Guests(); // Default constructor
+        ~Guests(); // Destructor
+        Guests(int,int,int,int,int,int,int, int); // Parametrized constructor
         string GuestsToString() const; // Convert guest info to string and return it
         void AddGuest(const Information&); // Add guest to room
         
@@ -103,23 +105,30 @@ class Guests_Res_Request{
 
 class Reservation_Manager{
     private:
-        const int max_no_of_nights = 7;
-        const int no_of_rooms = 20;
-        Guests_Res_Request* reservations; 
-        array <array<int, 7>, 20> arr; // I get an error when I put max_no_of_nights and no_of_rooms...
-        // all empty spots of array must be filled with zeroes
-    public:
-        Reservation_Manager();
-        Reservation_Manager(); // Parametrized constructor...        
+        static const int max_no_of_nights = 7; // Don't understand why it has to be static...
+        static const int no_of_rooms = 20;
+        Guests_Res_Request** reservations; // array of pointers... 
+        // Guest_Res_Request* is for a pointer POITING to an array of objects (but we want an array of POINTERS)
+        array <array<int, no_of_rooms>, max_no_of_nights> reservationArr = {}; // Setting array to zero
+        // I get an error when I put max_no_of_nights and no_of_rooms...
         
+        int reservationCount;
+
+    public:
+        Reservation_Manager(); 
+        ~Reservation_Manager();
+        // Reservation_Manager(int, int); 
+        // Parametrized constructor... is it necessary? 
+        // I don't think so, since the max number of nights and rooms are constants.
+        
+        int get_numReservations () const;
+
         void printReservations() const;
+        // Check if roomNumber is available first, function used for processing reservation
+        bool checkReservationAvailibility(int, int, int) const;
         int processReservationRequest(Guests_Res_Request&);
         Guests_Res_Request get_DetailsOfReservation(int) const;
         void cancelReservation(int);
-
-        // Getters
-        // Setters
-
 
 };
 
