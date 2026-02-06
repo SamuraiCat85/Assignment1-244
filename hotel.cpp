@@ -1,7 +1,9 @@
 #include "HOTEL.H"
 #include <iostream>
-#include<string.h>
-#include<string>
+#include <string.h>
+#include <string>
+#include <array>
+#include <iomanip>
 
 using namespace std;
 
@@ -31,7 +33,7 @@ string Date::DateToString() const{
     return str;
 }
 
-/* INFOMRATION class */
+/* INFORMATION class */
 
 // Default constructor
 Information::Information() {
@@ -41,10 +43,9 @@ Information::Information() {
 } 
 
 // Parametrized constructor
-Information::Information(char* fn ,char* ln ,int d, int m, int y){
+Information::Information(char* fn ,char* ln ,int d, int m, int y) : DOB(d,m,y){
     strcpy(fname , fn);
     strcpy(lname , ln);
-    Date DOB(d,m,y);
 }
 
 // Print INFORMATION function
@@ -55,8 +56,8 @@ void Information::print_info() const{
 
 // Getter functions
 Date Information::get_DOB() const { return DOB; }
-char* Information::get_fname() const { return fname; }
-char* Information::get_lname() const { return lname; }
+const char* Information::get_fname() const { return fname; }
+const char* Information::get_lname() const { return lname; }
 
 // Setter function
 void Information::set_DOB(int m, int d, int y){
@@ -65,13 +66,8 @@ void Information::set_DOB(int m, int d, int y){
     DOB.set_year(y);
 }
 
-void Information::set_fname(char* fn){
-    strcpy(fname , fn);
-} 
-
-void Information::set_lname(char* ln){
-    strcpy(lname , ln);
-}
+void Information::set_fname(const char* fn){ strcpy(fname , fn); } 
+void Information::set_lname(const char* ln){ strcpy(lname , ln); }
 
 // Convert INFORMATION to string function
 string Information::InfoToString() const {
@@ -84,14 +80,16 @@ string Information::InfoToString() const {
 /* GUESTS member functions */ 
 
 // Default Constructor
-Guests::Guests() : checkIn(Date()), checkOut(Date()), roomNumber(0), roomGuests(new Information[4]) {
+Guests::Guests() : checkIn(Date()), checkOut(Date()), roomNumber(0), roomGuests(new Information[4]), NumGuests(0) {
     // roomNumber = 0; just to show it in the body, added in the member initialization list
     // Room number --> if static room number counter < 20 then ????? ASKKKK IN PODDD SESSSIIONN
 }
+// Destructor
+Guests::~Guests(){ delete[] roomGuests; }
 
 // Parametrized constructor
-Guests::Guests(int m1, int d1, int y1, int m2, int d2, int y2, int rm)
-: checkIn(m1, d1, y1), checkOut(m2, d2, y2), roomNumber(rm), roomGuests(new Information[4]) {}
+Guests::Guests(int m1, int d1, int y1, int m2, int d2, int y2, int rm, int ng)
+: checkIn(m1, d1, y1), checkOut(m2, d2, y2), roomNumber(rm), roomGuests(new Information[4]), NumGuests(ng) {}
 
 // Adding guest function
 void Guests::AddGuest(const Information& newGuest){
@@ -119,13 +117,8 @@ string Guests::GuestsToString() const{
 }
 
 // Getter funtions 
-Date Guests::get_checkIn() const{
-    return checkIn;
-}
-
-Date Guests::get_checkOut() const{
-    return checkOut;
-}
+Date Guests::get_checkIn() const{ return checkIn; }
+Date Guests::get_checkOut() const{ return checkOut; }
 
 Information Guests::get_GuestInfo(int guestNumber){
     if (guestNumber < 0 || guestNumber >= NumGuests){
@@ -134,30 +127,15 @@ Information Guests::get_GuestInfo(int guestNumber){
     return roomGuests[guestNumber];
 }
 
-int Guests::get_numberGuests() const{
-    return NumGuests;
-}
-
-int Guests::get_roomNumber() const{ 
-    return roomNumber;
-}
+int Guests::get_numberGuests() const{ return NumGuests; }
+int Guests::get_roomNumber() const{ return roomNumber; }
 
 // Setter functions
-void Guests::set_checkIn(const Date& DOB){
-    checkIn = DOB;
-}
+void Guests::set_checkIn(const Date& DOB){ checkIn = DOB; }
+void Guests::set_checkOut(const Date& DOB){ checkOut = DOB; }
+void Guests::set_numGuests(int& ng){ NumGuests = ng; }
+void Guests::set_roomNumber(int& rm){ roomNumber = rm; }
 
-void Guests::set_checkOut(const Date& DOB){
-    checkOut = DOB;
-}
-
-void Guests::set_numGuests(int& ng){
-    NumGuests = ng;
-}
-
-void Guests::set_roomNumber(int& rm){
-    roomNumber = rm;
-}
 
 /* GUESTS RES REQUEST class */
 
@@ -167,40 +145,117 @@ Guests_Res_Request::Guests_Res_Request() : guest(Guests()), resID(0), numNights(
 Guests_Res_Request::Guests_Res_Request(Guests g, int rN, int nN) : guest(g), resID(rN), numNights(nN) { resNumGen++; }; // Parametrized constructor  
 
 // Getter functions
-Guests Guests_Res_Request::get_Guests() const{
-    return guest;
-}
-
-int Guests_Res_Request::get_resID() const{
-    return resID;
-}
-
-int Guests_Res_Request::get_numNights() const{
-    return numNights;
-}
+Guests Guests_Res_Request::get_Guests() const{ return guest; }
+int Guests_Res_Request::get_resID() const{ return resID; }
+int Guests_Res_Request::get_numNights() const{ return numNights; }
 
 // Setter functions
-
-void Guests_Res_Request::set_FullGuestInfo(Guests g){
-    guest = g;
-}
-
-void Guests_Res_Request::set_resID(int rN){
-    resID = rN;
-}
-
-void Guests_Res_Request::set_numNights(int nN){
-    numNights = nN;
-}
+void Guests_Res_Request::set_FullGuestInfo(Guests g){ guest = g; }
+void Guests_Res_Request::set_resID(int rN){ resID = rN; }
+void Guests_Res_Request::set_numNights(int nN){ numNights = nN; }
 
 /* RESERVATION MANAGER class */
 
 // Default constructor
+Reservation_Manager::Reservation_Manager() : reservations(new Guests_Res_Request*[100]), reservationCount(0) {
+    // Set the pointers to nullptr so they don't start dangling
+    for (int i = 0; i < 100; i++){
+        reservations[i] = nullptr;
+    }
+}
 
-// Parametrized constructor
+// Destructor
+Reservation_Manager::~Reservation_Manager(){
+    for(int i=0;i<100;i++)
+        delete reservations[i];
 
-// Getter functions
+    delete[] reservations;
+}
 
-// Setter functions
+// Parametrized constructor...
+// Reservation_Manager::Reservation_Manager(int maxNights, int noRooms) : reservations(new Guests_Res_Request[100]), reservationArr() {}
 
+int Reservation_Manager::get_numReservations () const{
+    return reservationCount;
+}
 
+void Reservation_Manager::printReservations() const{ // use iomanip to make it look like an actual table
+    cout << "Reservations: " << endl;
+    for (int i = 0; i < max_no_of_nights; i++){
+        cout << "March " << to_string(i + 1) << ": ";
+        for (int j = 0; j < no_of_rooms; j++){
+            cout << reservationArr[i][j] << " ";
+        }
+        cout << endl;
+    }
+}
+
+bool Reservation_Manager::checkReservationAvailibility(int roomIndex,int startNight, int numOfNights) const{
+
+    // Check bounds first
+    if (roomIndex < 0 || roomIndex >= no_of_rooms) return false;
+    if (startNight < 0 || startNight >= max_no_of_nights) return false;
+    if (numOfNights <= 0) return false;
+    if (startNight + numOfNights > max_no_of_nights) return false;
+
+    for (int i = 0; i < startNight + numOfNights; i++){
+        if (reservationArr[i][roomIndex] != 0)
+            return false;
+    }
+    return true;
+}
+
+// Essentially adding a reservation
+int Reservation_Manager::processReservationRequest(Guests_Res_Request& request){
+
+    Guests g = request.get_Guests();
+    int roomIndex = g.get_roomNumber() - 1; // room number to index because array starts at 0, not 1
+    Date checkInDate = g.get_checkIn();
+    int startNight = checkInDate.get_day() - 1; // date to night index for same reaseon ^^^
+    int numOfNights = request.get_numNights();
+    
+    if (checkReservationAvailibility(roomIndex, startNight, numOfNights)) /* check if room is available*/ {
+        // Writing the reservation ID into each night slot in the reservation array
+        for (int i = startNight; i < startNight + numOfNights; i++){
+            reservationArr[i][roomIndex] = request.get_resID();
+        }
+        // Adding the actual object of data (Guest_Res_Request) into the reservations database which is the array of pointers
+        reservations[reservationCount] = new Guests_Res_Request(request);
+        reservationCount++;
+        return request.get_resID(); // Returns reservation ID if the process was a success
+    }
+    else{
+        return -1; // Returns -1 if the process was a failure/invalid
+    }
+}
+
+Guests_Res_Request Reservation_Manager::get_DetailsOfReservation(int resID) const{
+    for (int i = 0; i < reservationCount; i++){
+        if (reservations[i] != nullptr && reservations[i]->get_resID() == resID){
+            return *reservations[i];
+        }
+    }
+    // Return a default Guests_Res_Request if not found...
+    return Guests_Res_Request();
+}
+
+void Reservation_Manager::cancelReservation(int resID){
+    for (int i = 0; i < reservationCount; i++){
+        if (reservations[i] != nullptr && reservations[i]->get_resID() == resID){   
+            for (int n = 0; n < max_no_of_nights; n++)
+                for (int r = 0; r < no_of_rooms; r++)
+                    if (reservationArr[n][r] == resID)
+                        reservationArr[n][r] = 0;
+
+            delete reservations[i];
+
+            // Shift remaining reservations to fill the gap
+            for (int j = i; j < reservationCount - 1; j++)
+                reservations[j] = reservations[j + 1];
+
+            reservations[reservationCount - 1] = nullptr;
+            reservationCount--;
+            return;
+        }
+    }
+}
