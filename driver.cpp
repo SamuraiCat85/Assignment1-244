@@ -10,7 +10,8 @@ int main(){
 
     // Create a reservation info
     Guests roomGuest(3, 1, 2026, 3, 10, 2026, 15, 2);
-    // Actually let's say I want to add another guest
+
+    // Actually let's say I want two other guests
     roomGuest.AddGuest("Noor", "Wong", 2, 2, 2002);
     roomGuest.AddGuest("Prisca", "Musallam", 3, 3, 2003);
 
