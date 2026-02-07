@@ -43,7 +43,7 @@ Information::Information() {
 } 
 
 // Parametrized constructor
-Information::Information(char* fn ,char* ln ,int d, int m, int y) : DOB(d,m,y){
+Information::Information(char* fn ,char* ln ,int m, int d, int y) : DOB(m,d,y){
     strcpy(fname , fn);
     strcpy(lname , ln);
 }

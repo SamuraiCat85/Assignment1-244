@@ -24,9 +24,7 @@ class Date{
         Date(const Date&);
         Date(int,int,int); 
         
-
-
-}; ///why is it called time in the member variables
+}; 
 
 
 class Information{
@@ -49,8 +47,6 @@ class Information{
         void set_fname(const char*);
         void set_lname(const char*);
         void set_DOB(int,int,int);
-
-
 
 };
 
