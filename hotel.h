@@ -4,6 +4,10 @@
 #include <array>
 #include <string>
 
+using std::string; ///
+using std::array;//// did this to help solve the string-returning functions issue
+
+
 class Date{
     private:
         int month, day, year;
@@ -44,8 +48,8 @@ class Information{
         const char* get_lname() const;
         Date get_DOB() const;
 
-        void set_fname(const char*);
-        void set_lname(const char*);
+        void set_fname(char*);
+        void set_lname(char*);
         void set_DOB(int,int,int);
 
 };
@@ -62,12 +66,12 @@ class Guests{
         Guests(); // Default constructor
         ~Guests(); // Destructor
         Guests(int,int,int,int,int,int,int, int); // Parametrized constructor
-        string GuestsToString() const; // Convert guest info to string and return it
+        string GuestsToString()const; // Convert guest info to string and return it
         void AddGuest(const Information&); // Add guest to room
         
         Date get_checkIn() const;
         Date get_checkOut() const;
-        Information get_GuestInfo(int);
+        Information get_GuestInfo(int);//
         int get_numberGuests() const;
         int get_roomNumber() const;
 
@@ -80,16 +84,16 @@ class Guests{
 
 class Guests_Res_Request{
     private:
-        Guests guest;
+        Guests occupants;
         static int resNumGen; // reservation number generator/counter
         int resID; // Reservation number
         int numNights;
 
     public:
         Guests_Res_Request();
-        Guests_Res_Request(Guests, int, int);
+        Guests_Res_Request(const Guests&, int, int);
 
-        Guests get_Guests() const;
+        Guests get_occupants() const;
         int get_resID() const;
         int get_numNights() const;
 

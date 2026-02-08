@@ -7,9 +7,14 @@
 
 using namespace std;
 
+
+int Guests_Res_Request::resNumGen = 0; //For the static variable in Guests_Res_Request functions
+
+
 /* DATE class */
 
 Date::Date() : month(0), day(0), year(0){}; // Default constructor
+Date::Date(const Date& other) : month(other.month), day(other.day), year(other.year){};//copy constructor
 Date::Date(int m, int d, int y) : month(m), day(d), year(y){}; // Parametrized constructor
 
 // Getter functions
@@ -33,13 +38,15 @@ string Date::DateToString() const{
     return str;
 }
 
+
+
 /* INFORMATION class */
 
 // Default constructor
 Information::Information() {
     strcpy(fname , "");
     strcpy(lname , "");
-    Date DOB();
+    DOB = Date();
 } 
 
 // Parametrized constructor
@@ -49,15 +56,15 @@ Information::Information(char* fn ,char* ln ,int m, int d, int y) : DOB(m,d,y){
 }
 
 // Print INFORMATION function
-void Information::print_info() const{
+void Information::print_info() const {
     cout << fname << " " << lname << endl;
     DOB.print_date();
 };
 
 // Getter functions
-Date Information::get_DOB() const { return DOB; }
-const char* Information::get_fname() const { return fname; }
-const char* Information::get_lname() const { return lname; }
+Date Information::get_DOB()const { return DOB; }
+const char* Information::get_fname()const { return fname; }
+const char* Information::get_lname()const { return lname; }
 
 // Setter function
 void Information::set_DOB(int m, int d, int y){
@@ -66,8 +73,8 @@ void Information::set_DOB(int m, int d, int y){
     DOB.set_year(y);
 }
 
-void Information::set_fname(const char* fn){ strcpy(fname , fn); } 
-void Information::set_lname(const char* ln){ strcpy(lname , ln); }
+void Information::set_fname(char* fn){ strcpy(fname , fn); } 
+void Information::set_lname(char* ln){ strcpy(lname , ln); }
 
 // Convert INFORMATION to string function
 string Information::InfoToString() const {
@@ -104,7 +111,7 @@ void Guests::AddGuest(const Information& newGuest){
 }
 
 // Convert GUESTS list information to string function
-string Guests::GuestsToString() const{
+string Guests::GuestsToString()const{
     string str = "Room number " + to_string(roomNumber) + ": \n";
     for (int i = 0; i < NumGuests; i++){
         str = str + (roomGuests[i].InfoToString()) + "\n";
@@ -141,18 +148,20 @@ void Guests::set_roomNumber(int& rm){ roomNumber = rm; }
 
 // Guests objects should be created DYNAMICALLY
 
-Guests_Res_Request::Guests_Res_Request() : guest(Guests()), resID(0), numNights(0) { resNumGen++; }; // Default constructor
-Guests_Res_Request::Guests_Res_Request(Guests g, int rN, int nN) : guest(g), resID(rN), numNights(nN) { resNumGen++; }; // Parametrized constructor  
+Guests_Res_Request::Guests_Res_Request() : occupants(Guests()), resID(0), numNights(0) { resNumGen++; }; // Default constructor
+Guests_Res_Request::Guests_Res_Request(const Guests& g, int rN, int nN) : occupants(g), resID(rN), numNights(nN) { resNumGen++; }; // Parametrized constructor  
 
 // Getter functions
-Guests Guests_Res_Request::get_Guests() const{ return guest; }
+Guests Guests_Res_Request::get_occupants() const{ return occupants; }
 int Guests_Res_Request::get_resID() const{ return resID; }
 int Guests_Res_Request::get_numNights() const{ return numNights; }
 
 // Setter functions
-void Guests_Res_Request::set_FullGuestInfo(Guests g){ guest = g; }
+void Guests_Res_Request::set_FullGuestInfo(Guests g){ occupants = g; }
 void Guests_Res_Request::set_resID(int rN){ resID = rN; }
 void Guests_Res_Request::set_numNights(int nN){ numNights = nN; }
+
+
 
 /* RESERVATION MANAGER class */
 
@@ -198,7 +207,7 @@ bool Reservation_Manager::checkReservationAvailibility(int roomIndex,int startNi
     if (numOfNights <= 0) return false;
     if (startNight + numOfNights > max_no_of_nights) return false;
 
-    for (int i = 0; i < startNight + numOfNights; i++){
+    for (int i =0; i < startNight + numOfNights; i++){
         if (reservationArr[i][roomIndex] != 0)
             return false;
     }
@@ -258,4 +267,5 @@ void Reservation_Manager::cancelReservation(int resID){
             return;
         }
     }
-}
+} */
+
