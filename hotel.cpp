@@ -87,16 +87,15 @@ string Information::InfoToString() const {
 /* GUESTS member functions */ 
 
 // Default Constructor
-Guests::Guests() : checkIn(Date()), checkOut(Date()), roomNumber(0), roomGuests(new Information[4]), NumGuests(0) {
-    // roomNumber = 0; just to show it in the body, added in the member initialization list
-    // Room number --> if static room number counter < 20 then ????? ASKKKK IN PODDD SESSSIIONN
+Guests::Guests() : checkIn(Date()), checkOut(Date()), roomGuests(new Information[4]), NumGuests(0), roomNumber(0) {
+    
 }
 // Destructor
 Guests::~Guests(){ delete[] roomGuests; }
 
 // Parametrized constructor
 Guests::Guests(int m1, int d1, int y1, int m2, int d2, int y2, int rm, int ng)
-: checkIn(m1, d1, y1), checkOut(m2, d2, y2), roomNumber(rm), roomGuests(new Information[4]), NumGuests(ng) {}
+: checkIn(m1, d1, y1), checkOut(m2, d2, y2), roomGuests(new Information[4]), NumGuests(ng), roomNumber(rm) {}
 
 // Adding guest function
 void Guests::AddGuest(const Information& newGuest){
