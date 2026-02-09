@@ -39,7 +39,7 @@ class Information{
 
     public:
         Information();
-        Information(char*,char*,int,int,int);
+        Information(const char*,const char*,int,int,int);
        
         void print_info() const;
         string InfoToString() const;
@@ -65,6 +65,7 @@ class Guests{
     public:
         Guests(); // Default constructor
         ~Guests(); // Destructor
+        Guests(const Guests& other);
         Guests(int,int,int,int,int,int,int, int); // Parametrized constructor
         string GuestsToString()const; // Convert guest info to string and return it
         void AddGuest(const Information&); // Add guest to room

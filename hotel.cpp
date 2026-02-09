@@ -50,7 +50,7 @@ Information::Information() {
 } 
 
 // Parametrized constructor
-Information::Information(char* fn ,char* ln ,int m, int d, int y) : DOB(m,d,y){
+Information::Information(const char* fn ,const char* ln ,int m, int d, int y) : DOB(m,d,y){
     strcpy(fname , fn);
     strcpy(lname , ln);
 }
@@ -93,8 +93,22 @@ Guests::Guests() : checkIn(Date()), checkOut(Date()), roomGuests(new Information
 // Destructor
 Guests::~Guests(){ delete[] roomGuests; }
 
+//copy constructor
+Guests::Guests(const Guests& other)
+    : checkIn(other.checkIn),
+      checkOut(other.checkOut),
+      NumGuests(other.NumGuests),
+      roomNumber(other.roomNumber)
+    {
+    roomGuests = new Information[4];
+    for (int i = 0; i < other.NumGuests; i++) {
+        roomGuests[i] = other.roomGuests[i];
+    }
+}
+
+
 // Parametrized constructor
-Guests::Guests(int m1, int d1, int y1, int m2, int d2, int y2, int rm, int ng)
+Guests::Guests(int m1, int d1, int y1, int m2, int d2, int y2, int ng, int rm)
 : checkIn(m1, d1, y1), checkOut(m2, d2, y2), roomGuests(new Information[4]), NumGuests(ng), roomNumber(rm) {}
 
 // Adding guest function
@@ -206,7 +220,7 @@ bool Reservation_Manager::checkReservationAvailibility(int roomIndex,int startNi
     if (numOfNights <= 0) return false;
     if (startNight + numOfNights > max_no_of_nights) return false;
 
-    for (int i =0; i < startNight + numOfNights; i++){
+    for (int i = startNight; i < startNight + numOfNights; i++){
         if (reservationArr[i][roomIndex] != 0)
             return false;
     }
