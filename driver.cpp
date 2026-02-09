@@ -1,45 +1,45 @@
-
 #include "HOTEL.H"
 #include <iostream>
-
 using namespace std;
 
+int main() {
 
+    // Create guest info
+    Information g1((char*)"Noor", (char*)"Musallam", 1, 1, 2000);
+    Information g2((char*)"Prisca", (char*)"Wong", 4, 4, 2005);
 
-int main(){
-    Date date1(2,3,2016);
-    date1.print_date();
+    // Create a Guests object
+    Guests group(3, 1, 2026, 3, 8, 2026, 5, 0); // room 5, 0 guests initially
+    group.AddGuest(g1);
+    group.AddGuest(g2);
 
-    return 0;
+    // Create reservation request
+    Guests_Res_Request req(group, 1, 7); // resID=1, 7 nights
 
-}
+    // Create manager
+    Reservation_Manager manager;
 
-/*    
+    // Process reservation
+    int result = manager.processReservationRequest(req);
 
-    // Create info for two people
-    Information guest1("Prisca", "Wong", 4, 4, 2005);
-    Information guest2("Noor", "Musallam", 1, 1, 2000);
+    if (result != -1) {
+        cout << "Reservation successful! ID = " << result << endl;
+    } else {
+        cout << "Reservation failed." << endl;
+    }
 
-    // 
-    Guests group1 (3, 1, 2026, 3, 10, 2026, 1444 , 0);
-
-    // Actually let's say I want to now add the two people as guests of this room 
-    group1.AddGuest(guest2);
-    group1.AddGuest(guest1);
-
-
-
-// Create reservation request
-    Guests_Res_Request request1(group1, 15, 9);
-
-    // Process it in the reservation manager
-    Reservation_Manager();
-    manager.Reservation_Manager(request1);
-
-    // Print grid
+    // Print reservation grid
     manager.printReservations();
 
-    // Cancel reservation
-    manager.cancelReservation(request1);
+    // Print details of reservation
+    Guests_Res_Request details = manager.get_DetailsOfReservation(result);
+    cout << details.get_occupants().GuestsToString();
 
-    return 0;*/
+    // Cancel reservation
+    manager.cancelReservation(result);
+
+    cout << "\nAfter cancellation:\n";
+    manager.printReservations();
+
+    return 0;
+}

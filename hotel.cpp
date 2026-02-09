@@ -146,7 +146,7 @@ void Guests::set_roomNumber(int& rm){ roomNumber = rm; }
 
 /* GUESTS RES REQUEST class */
 
-// Guests objects should be created DYNAMICALLY
+// 
 
 Guests_Res_Request::Guests_Res_Request() : occupants(Guests()), resID(0), numNights(0) { resNumGen++; }; // Default constructor
 Guests_Res_Request::Guests_Res_Request(const Guests& g, int rN, int nN) : occupants(g), resID(rN), numNights(nN) { resNumGen++; }; // Parametrized constructor  
@@ -217,7 +217,7 @@ bool Reservation_Manager::checkReservationAvailibility(int roomIndex,int startNi
 // Essentially adding a reservation
 int Reservation_Manager::processReservationRequest(Guests_Res_Request& request){
 
-    Guests g = request.get_Guests();
+    Guests g = request.get_occupants();
     int roomIndex = g.get_roomNumber() - 1; // room number to index because array starts at 0, not 1
     Date checkInDate = g.get_checkIn();
     int startNight = checkInDate.get_day() - 1; // date to night index for same reaseon ^^^
@@ -267,5 +267,4 @@ void Reservation_Manager::cancelReservation(int resID){
             return;
         }
     }
-} */
-
+}
